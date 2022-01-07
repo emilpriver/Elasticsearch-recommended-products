@@ -3,6 +3,7 @@ This project is used to learn more about Elasticsearch. I found a [post](https:/
 
 # Plans
 - How could I scale this system to be able to use on multiple nodes in a big cluster, am I able to scale this worldwide in some smart way?
+- Be able to get results based on users information
 
 # Resources references
 - [High-Quality Recommendation Systems with Elasticsearch](https://opensourceconnections.com/blog/2016/09/09/better-recsys-elasticsearch/)
