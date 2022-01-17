@@ -1,7 +1,7 @@
-use elasticsearch::Elasticsearch;
 use serde_json::json;
 use worker::*;
 
+mod elastic;
 mod utils;
 
 fn log_request(req: &Request) {
@@ -21,7 +21,7 @@ pub async fn main(req: Request, env: Env) -> Result<Response> {
     utils::set_panic_hook();
 
     let router = Router::new();
-    let elastic_client = Elasticsearch::default();
+    let elastic_client = elastic::Elasticsearch::client("http://localhost:9200".to_string());
 
     router
         .get("/", |_, _| Response::ok("Hello from Workers!"))
@@ -47,7 +47,7 @@ pub async fn main(req: Request, env: Env) -> Result<Response> {
         
             Response::error("Bad Request", 400)
         })
-        .get("/worker-version", |_, ctx| {
+        .get("/recommendations", |_, ctx| {
             let version = ctx.var("WORKERS_RS_VERSION")?.to_string();
             Response::ok(version)
         })
