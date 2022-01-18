@@ -21,7 +21,11 @@ pub async fn main(req: Request, env: Env) -> Result<Response> {
     utils::set_panic_hook();
 
     let router = Router::new();
-    let elastic_client = elastic::Elasticsearch::client("http://localhost:9200".to_string());
+    let elastic_client = elastic::Elasticsearch::client(
+        "http://localhost:9200".to_string(),
+        "products".to_string(),
+        "orders".to_string()
+    );
 
     router
         .get("/", |_, _| Response::ok("Hello from Workers!"))

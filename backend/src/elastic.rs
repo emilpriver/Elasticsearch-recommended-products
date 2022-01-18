@@ -8,13 +8,19 @@ use std::collections::HashMap;
 
 pub struct Elasticsearch {
   uri: String,
+  order_index: String,
+  products_index: String
 }
 
 impl Elasticsearch {
-  pub fn client(uri: String) -> Self {
+  pub fn client(uri: String, products_index: String, order_index: String) -> Self {
     print!("{}", uri);
 
-    Elasticsearch { uri }
+    Elasticsearch {
+      uri,
+      products_index,
+      order_index,
+    }
   }
 
   async fn create_index(self, index: String) -> Result<String, String> {
@@ -53,9 +59,9 @@ impl Elasticsearch {
     match data.status() {
       reqwest::StatusCode::OK => return true,
       reqwest::StatusCode::NOT_FOUND => {
-        self.create_index(index).await;
+        let status = self.create_index(index).await.unwrap();
 
-        return true
+        return assert_eq!(status, "Index created")
       },
       _ => {
         panic!("Statuscode don't match 200 or 404")
@@ -63,8 +69,11 @@ impl Elasticsearch {
     }
   }
 
-  pub async fn bulk_add(self, index: String, data: HashMap<String, String>) -> bool {
-    self.create_index_if_not_exists(index).await
+  pub async fn conver_and_add_order_to_elastic(self, order: char, products: Vec<char>) -> bool {
+    // This functions fetches the products and create recommendations to all given products
+    // based on both new info and the information inside of elastic.
+
+    return true
   }
 }
 
@@ -72,6 +81,8 @@ impl Default for Elasticsearch {
   fn default() -> Self {
     Self {
       uri: "http://localhost:9200".to_string(),
+      products_index: "products".to_string(),
+      order_index: "orders".to_string()
     }
   }
 }
